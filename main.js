@@ -3,6 +3,7 @@ var con = document.getElementById("con");
 var BOAT = '<img style="width:30px" src="boat-tiny.png"></img>';
 
 function print(text) {
+    text = text + "";
     con.innerHTML += text.split(" ").join("&nbsp")
         .split("\n").join("<br>")
         .split("BOAT").join(BOAT) + "<br>";
