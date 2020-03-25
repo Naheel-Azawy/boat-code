@@ -65,52 +65,12 @@
 
 <body>
     <h1>Code: <button onclick="run()">RUN</button></h1>
-    <div style="">
-        <textarea>
-print("Hi!!!!!!!")
-for (let i = 0; i < 5; i++)
-  print("Hello MASHA!!! " + "BOAT".repeat(i))
-        </textarea>
-    </div>
+    <div><textarea></textarea></div>
 
     <h1>Output:</h1>
     <div id="con" style="padding: 10px"></div>
 
-    <script>
-     var con = document.getElementById("con");
-
-     var BOAT = '<img style="width:30px" src="boat-tiny.png"></img>';
-
-     function print(text) {
-         con.innerHTML += text.split(" ").join("&nbsp")
-                              .split("\n").join("<br>")
-                              .split("BOAT").join(BOAT) + "<br>";
-     }
-
-     function clear() {
-         con.innerHTML = "";
-     }
-
-     function sleep(ms) {
-         return new Promise(resolve => setTimeout(resolve, ms));
-     }
-
-     var editor = CodeMirror.fromTextArea(document.querySelector('textarea'), {
-         lineNumbers: true, theme: "ayu-dark"
-     });
-     editor.setSize("auto", "60vh");
-
-     function run() {
-         con.innerHTML = "";
-         var code = editor.getValue();
-         eval(code);
-     }
-
-     //editor.on('change', function(cm, changeObj) {
-     //    run();
-     //});
-     run();
-    </script>
+    <script src="main.js"></script>
 </body>
 
 </html>
