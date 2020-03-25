@@ -1,2 +1,3 @@
 * Boat Code
   A tiny Javascript playground with a boat
+  [[./screenshot.png]]
