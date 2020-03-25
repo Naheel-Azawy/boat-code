@@ -35,7 +35,7 @@ function saveStuff(obj) {
 // Do something with your data.
 function loadStuff() {
     var url = new URL(window.location.href);
-    var urlSrc = decodeURI(url.searchParams.get("src"));
+    var urlSrc = url.searchParams.get("src");
     if (urlSrc && urlSrc != "null")
         return {src: urlSrc};
     else if (saveData.obj && saveData.obj.src && saveData.obj.src != "null")
@@ -94,7 +94,7 @@ function copyTextToClipboard(text) {
 
 function copy() {
     var url = "https://naheel-azawy.github.io/boat-code?src=";
-    url += encodeURI(editor.getValue());
+    url += encodeURIComponent(editor.getValue())
     copyTextToClipboard(url);
 }
 
