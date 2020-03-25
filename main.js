@@ -1,12 +1,72 @@
+var defaultCode = `
+print("Hi!!!!!!!")
+for (let i = 1; i <= 5; i++) {
+  print("Here " + (i > 1 ? "are" : "is") +
+    " " + i + " boat" +
+    (i > 1 ? "s" : "!!") + "!!! " +
+    "BOAT".repeat(i))
+}
+await sleep(3000);
+clear();
+print("And here is a floating boat!")
+await sleep(2000);
+clear();
+let s = 300;
+let end = 5;
+for (let i = 0; i < end; i++) {
+  print("~ - ~ - ~ - ~ -");
+  print(" ~ - BOAT ~ - ~");
+  print("- ~ - ~ - ~ - ~");
+  await sleep(s);
+  clear();
+  print("- ~ - ~ - ~ - ~");
+  print("~ - ~ BOAT ~ - ~");
+  print(" ~ - ~ - ~ - ~ -");
+  if (i == end - 1) break;
+  await sleep(s);
+  clear();
+  print(" ~ - ~ - ~ - ~ -");
+  print("- ~ - ~ BOAT ~ -");
+  print("- ~ - ~ - ~ - ~");
+  await sleep(s);
+  clear();
+  print("- ~ - ~ - ~ - ~");
+  print(" ~ - ~ - ~ BOAT -");
+  print("~ - ~ - ~ - ~ -");
+  await sleep(s);
+  clear();
+  print(" - ~ - ~ - ~ -");
+  print("~ - ~ - ~ - BOAT");
+  print("- ~ - ~ - ~ - ~");
+  await sleep(s);
+  clear();
+  print("~ - ~ - ~ - ~ -");
+  print("BOAT ~ - ~ - ~ -");
+  print(" - ~ - ~ - ~ -");
+  await sleep(s);
+  clear();
+  print(" - ~ - ~ - ~ -");
+  print("- BOAT ~ - ~ - ~");
+  print("~ - ~ - ~ - ~ -");
+  await sleep(s);
+  clear();
+}
+print(" == THE END ==");
+`;
+
 var con = document.getElementById("con");
 
 var BOAT = '<img style="width:30px" src="boat-tiny.png"></img>';
 
-function print(text) {
+function write(text) {
     text = text + "";
     con.innerHTML += text.split(" ").join("&nbsp")
         .split("\n").join("<br>")
-        .split("BOAT").join(BOAT) + "<br>";
+        .split("BOAT").join(BOAT);
+}
+
+function print(text) {
+    write(text + "<br>");
 }
 
 function clear() {
@@ -16,12 +76,6 @@ function clear() {
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
-
-var defaultCode = `
-print("Hi!!!!!!!")
-for (let i = 0; i < 5; i++)
-  print("Hello MASHA!!! " + "BOAT".repeat(i))
-`;
 
 var saveData = JSON.parse(localStorage.saveData || null) || {};
 
@@ -49,40 +103,43 @@ var editor = CodeMirror.fromTextArea(document.querySelector('textarea'), {
 });
 editor.setSize("auto", "60vh");
 
+var is_running = false;
+
 function run() {
+    if (is_running) {
+        alert("Already running! Please wait while it finishes running");
+        return;
+    }
+    is_running = true;
     con.innerHTML = "";
     var code = editor.getValue();
+    code = "(async function(){\n" +
+        code +
+        "\nis_running = false;" +
+        "\n})();";
     eval(code);
 }
 
 // https://stackoverflow.com/questions/400212/how-do-i-copy-to-the-clipboard-in-javascript
-
-function fallbackCopyTextToClipboard(text) {
-    var textArea = document.createElement("textarea");
-    textArea.value = text;
-
-    // Avoid scrolling to bottom
-    textArea.style.top = "0";
-    textArea.style.left = "0";
-    textArea.style.position = "fixed";
-
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
-
-    try {
-        var successful = document.execCommand('copy');
-        var msg = successful ? 'successful' : 'unsuccessful';
-        console.log('Fallback: Copying text command was ' + msg);
-    } catch (err) {
-        console.error('Fallback: Oops, unable to copy', err);
-    }
-
-    document.body.removeChild(textArea);
-}
 function copyTextToClipboard(text) {
     if (!navigator.clipboard) {
-        fallbackCopyTextToClipboard(text);
+        var textArea = document.createElement("textarea");
+        textArea.value = text;
+        // Avoid scrolling to bottom
+        textArea.style.top = "0";
+        textArea.style.left = "0";
+        textArea.style.position = "fixed";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+            var successful = document.execCommand('copy');
+            var msg = successful ? 'successful' : 'unsuccessful';
+            console.log('Fallback: Copying text command was ' + msg);
+        } catch (err) {
+            console.error('Fallback: Oops, unable to copy', err);
+        }
+        document.body.removeChild(textArea);
         return;
     }
     navigator.clipboard.writeText(text).then(function() {
@@ -94,7 +151,7 @@ function copyTextToClipboard(text) {
 
 function copy() {
     var url = "https://naheel-azawy.github.io/boat-code?src=";
-    url += encodeURIComponent(editor.getValue())
+    url += encodeURIComponent(editor.getValue());
     copyTextToClipboard(url);
 }
 
