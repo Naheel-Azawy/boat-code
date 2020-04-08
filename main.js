@@ -58,15 +58,23 @@ var con = document.getElementById("con");
 
 var BOAT = '<img style="width:30px" src="boat-tiny.png"></img>';
 
-function write(text) {
+function write(text, color) {
     text = text + "";
-    con.innerHTML += text.split(" ").join("&nbsp")
+    text = text.split(" ").join("&nbsp")
         .split("\n").join("<br>")
         .split("BOAT").join(BOAT);
+    if (color) {
+        text = `<font color="${color}">${text}</font>`;
+    }
+    con.innerHTML += text;
 }
 
-function print(text) {
-    write(text + "<br>");
+function print(text, color) {
+    write(text + "\n", color);
+}
+
+function print_err(text) {
+    print("ERROR: " + text, "red");
 }
 
 function clear() {
@@ -113,10 +121,14 @@ function run() {
     is_running = true;
     con.innerHTML = "";
     var code = editor.getValue();
-    code = "(async function(){\n" +
-        code +
-        "\nis_running = false;" +
-        "\n})();";
+    code = `(async function() {
+        try {
+         ${code}
+        } catch (_err) {
+         print_err(_err);
+        }
+        is_running = false;
+        })();`
     eval(code);
 }
 
